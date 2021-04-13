@@ -7,7 +7,7 @@ import torch
 import pytorch_lightning as pl
 import wandb
 
-from text_recognizer import lit_models
+from flowers_classification import litModels
 
 
 # In order to ensure reproducible experiments, we must set random seeds.
@@ -33,14 +33,14 @@ def _setup_parser():
     parser = argparse.ArgumentParser(add_help=False, parents=[trainer_parser])
 
     # Basic arguments
-    parser.add_argument("--data_class", type=str, default="MNIST")
-    parser.add_argument("--model_class", type=str, default="MLP")
+    parser.add_argument("--data_class", type=str, default="FLOWERS")
+    parser.add_argument("--model_class", type=str, default="VGG")
     parser.add_argument("--load_checkpoint", type=str, default=None)
 
     # Get the data and model classes, so that we can add their specific arguments
     temp_args, _ = parser.parse_known_args()
-    data_class = _import_class(f"text_recognizer.data.{temp_args.data_class}")
-    model_class = _import_class(f"text_recognizer.models.{temp_args.model_class}")
+    data_class = _import_class(f"flowers_classification.data.flowers.{temp_args.data_class}")
+    model_class = _import_class(f"flowers_classification.models.{temp_args.model_class}")
 
     # Get data, model, and LitModel specific arguments
     data_group = parser.add_argument_group("Data Args")
@@ -67,8 +67,8 @@ def main():
     """
     parser = _setup_parser()
     args = parser.parse_args()
-    data_class = _import_class(f"text_recognizer.data.{args.data_class}")
-    model_class = _import_class(f"text_recognizer.models.{args.model_class}")
+    data_class = _import_class(f"flowers_classification.data.{args.data_class}")
+    model_class = _import_class(f"flowers_classification.models.{args.model_class}")
     data = data_class(args)
     model = model_class(data_config=data.config(), args=args)
 
