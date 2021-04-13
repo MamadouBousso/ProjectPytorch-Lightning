@@ -10,7 +10,7 @@ FC1_DIM = 1024
 FC2_DIM = 128
 
 
-class MLP(nn.Module):
+class VGG(nn.Module):
     """Simple MLP suitable for recognizing single characters."""
 
     def __init__(

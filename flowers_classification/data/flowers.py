@@ -5,7 +5,9 @@ from torch.utils.data import random_split
 
 from torchvision import transforms
 
-from text_recognizer.data.base_data_module import BaseDataModule, load_and_print_info
+from flowers_classification.data.base_data_module import BaseDataModule, load_and_print_info
+
+from flowers_classification import util
 
 DOWNLOADED_DATA_DIRNAME = BaseDataModule.data_dirname() / "flower_photos"
 
@@ -15,7 +17,7 @@ from six.moves import urllib  # pylint: disable=wrong-import-position, wrong-imp
 opener = urllib.request.build_opener()
 opener.addheaders = [("User-agent", "Mozilla/5.0")]
 urllib.request.install_opener(opener)
-
+URL = 'https://s3.amazonaws.com/video.udacity-data.com/topher/2018/September/5baa60a0_flower-photos/flower-photos.zip'
 
 class FLOWERS(BaseDataModule):
     """
@@ -34,7 +36,7 @@ class FLOWERS(BaseDataModule):
 
     def prepare_data(self, *args, **kwargs) -> None:
         """Download train and test FLOWERS data from PyTorch canonical source."""
-        
+        util.download_url(URL, DOWNLOADED_DATA_DIRNAME)
 
     def setup(self, stage=None) -> None:
         """Split into train, val, test, and set dims."""

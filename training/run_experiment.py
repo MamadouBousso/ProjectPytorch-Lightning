@@ -40,7 +40,7 @@ def _setup_parser():
     # Get the data and model classes, so that we can add their specific arguments
     temp_args, _ = parser.parse_known_args()
     data_class = _import_class(f"flowers_classification.data.flowers.{temp_args.data_class}")
-    model_class = _import_class(f"flowers_classification.models.{temp_args.model_class}")
+    model_class = _import_class(f"flowers_classification.models.vgg.{temp_args.model_class}")
 
     # Get data, model, and LitModel specific arguments
     data_group = parser.add_argument_group("Data Args")
@@ -50,7 +50,7 @@ def _setup_parser():
     model_class.add_to_argparse(model_group)
 
     lit_model_group = parser.add_argument_group("LitModel Args")
-    lit_models.BaseLitModel.add_to_argparse(lit_model_group)
+    litModels.base.BaseLitModel.add_to_argparse(lit_model_group)
 
     parser.add_argument("--help", "-h", action="help")
     return parser
@@ -67,13 +67,13 @@ def main():
     """
     parser = _setup_parser()
     args = parser.parse_args()
-    data_class = _import_class(f"flowers_classification.data.{args.data_class}")
-    model_class = _import_class(f"flowers_classification.models.{args.model_class}")
+    data_class = _import_class(f"flowers_classification.data.flowers.{args.data_class}")
+    model_class = _import_class(f"flowers_classification.models.vgg.{args.model_class}")
     data = data_class(args)
     model = model_class(data_config=data.config(), args=args)
 
     if args.loss not in ("ctc", "transformer"):
-        lit_model_class = lit_models.BaseLitModel
+        lit_model_class = litModels.base.BaseLitModel
 
     if args.load_checkpoint is not None:
         lit_model = lit_model_class.load_from_checkpoint(args.load_checkpoint, args=args, model=model)
